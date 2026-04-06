@@ -2,15 +2,16 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<title>AI Quiz Generator PRO</title>
+<title>AI Quiz Generator FINAL</title>
 
 <style>
-body {font-family:Arial;background:#111;color:#fff;transition:0.3s;}
-.light {background:#f5f5f5;color:#000;}
-.container {max-width:900px;margin:auto;padding:20px;}
-select,input,button {width:100%;margin-top:10px;padding:10px;border-radius:8px;}
-button {background:#00c6ff;color:white;cursor:pointer;}
-.soal {margin-top:20px;padding:15px;background:rgba(255,255,255,0.1);border-radius:10px;}
+body {font-family:Arial;background:#111;color:#fff;padding:20px;}
+.container {max-width:900px;margin:auto;}
+input,select,button {
+ width:100%;margin-top:10px;padding:10px;border-radius:8px;border:none;
+}
+button {background:#00c6ff;color:white;font-weight:bold;}
+.soal {margin-top:20px;padding:15px;background:#222;border-radius:10px;}
 img {width:100%;margin-top:10px;border-radius:10px;}
 </style>
 </head>
@@ -22,20 +23,28 @@ img {width:100%;margin-top:10px;border-radius:10px;}
 
 <input type="password" id="apiKey" placeholder="API Key">
 
-<select id="bentuk" onchange="updateOpsi()">
+<select id="jenjang">
+<option value="">Pilih Jenjang</option>
+<option>SD</option>
+<option>SMP</option>
+<option>SMA</option>
+</select>
+
+<select id="mapel"></select>
+<select id="kelas"></select>
+<select id="materi"></select>
+
+<select id="bentuk">
 <option>Pilihan Ganda</option>
-<option>Pilihan Ganda Kompleks</option>
 <option>Benar/Salah</option>
 <option>Essay</option>
 </select>
 
-<input type="number" id="opsi" placeholder="Jumlah opsi (PG)" value="4">
-
+<input type="number" id="opsi" placeholder="Jumlah opsi PG (default 4)">
 <input type="number" id="jumlah" placeholder="Jumlah soal max 20">
 
 <label><input type="checkbox" id="gambar"> Soal Bergambar</label>
 
-<button onclick="toggleMode()">Dark / Light</button>
 <button onclick="generate()">Generate</button>
 
 <div id="output"></div>
@@ -43,36 +52,97 @@ img {width:100%;margin-top:10px;border-radius:10px;}
 
 <script>
 
-// DARK MODE
-function toggleMode(){
- document.body.classList.toggle("light");
+// ===== DATABASE LENGKAP
+const data = {
+
+SD:{
+ "Matematika":{
+  "1":["Bilangan","Penjumlahan","Pengurangan"],
+  "2":["Perkalian","Pembagian"],
+  "3":["Pecahan","Luas"],
+  "4":["FPB","KPK"],
+  "5":["Volume","Skala"],
+  "6":["Statistika","Debit"]
+ },
+ "IPA":{
+  "4":["Gaya","Energi"],
+  "5":["Organ","Ekosistem"],
+  "6":["Listrik","Tata Surya"]
+ },
+ "Bahasa Indonesia":{
+  "4":["Deskripsi","Narasi"],
+  "5":["Pidato","Iklan"],
+  "6":["Laporan","Argumentasi"]
+ }
+},
+
+SMP:{
+ "Matematika":{
+  "7":["Aljabar","Himpunan"],
+  "8":["SPLDV","Peluang"],
+  "9":["Statistika","Bangun Ruang"]
+ },
+ "IPA":{
+  "7":["Zat","Energi"],
+  "8":["Tekanan","Pernapasan"],
+  "9":["Listrik","Magnet"]
+ },
+ "Bahasa Inggris":{
+  "7":["Present"],
+  "8":["Past"],
+  "9":["Narrative"]
+ }
+},
+
+SMA:{
+ "Matematika":{
+  "10":["Eksponen","Logaritma"],
+  "11":["Limit","Turunan"],
+  "12":["Integral","Peluang"]
+ },
+ "Fisika":{
+  "10":["Gerak","Newton"],
+  "11":["Fluida","Gelombang"],
+  "12":["Listrik","Magnet"]
+ },
+ "Kimia":{
+  "10":["Atom","Ikatan"],
+  "11":["Reaksi","Kesetimbangan"],
+  "12":["Asam Basa"]
+ }
 }
 
-// HANDLE OPSI
-function updateOpsi(){
- let bentuk = document.getElementById("bentuk").value;
- let opsi = document.getElementById("opsi");
+};
 
- if(bentuk==="Essay"){
-  opsi.disabled=true;
-  opsi.value="";
- }
- else if(bentuk==="Benar/Salah"){
-  opsi.disabled=true;
-  opsi.value=2;
- }
- else if(bentuk==="Pilihan Ganda Kompleks"){
-  opsi.disabled=false;
-  opsi.value=5;
- }
- else{
-  opsi.disabled=false;
-  opsi.value=4;
- }
-}
+// ===== DROPDOWN
+const jenjang = document.getElementById("jenjang");
+const mapel = document.getElementById("mapel");
+const kelas = document.getElementById("kelas");
+const materi = document.getElementById("materi");
 
-// PARSE JSON
-function extractJSON(text){
+jenjang.onchange=()=>{
+ mapel.innerHTML="";kelas.innerHTML="";materi.innerHTML="";
+ Object.keys(data[jenjang.value]||{}).forEach(m=>{
+  mapel.add(new Option(m,m));
+ });
+};
+
+mapel.onchange=()=>{
+ kelas.innerHTML="";materi.innerHTML="";
+ Object.keys(data[jenjang.value][mapel.value]).forEach(k=>{
+  kelas.add(new Option(k,k));
+ });
+};
+
+kelas.onchange=()=>{
+ materi.innerHTML="";
+ data[jenjang.value][mapel.value][kelas.value].forEach(m=>{
+  materi.add(new Option(m,m));
+ });
+};
+
+// ===== PARSE
+function parseJSON(text){
  try{return JSON.parse(text);}
  catch{
   let m=text.match(/\[\s*{[\s\S]*}\s*\]/);
@@ -81,18 +151,32 @@ function extractJSON(text){
  return null;
 }
 
-// GENERATE
+// ===== GENERATE
 async function generate(){
+
  let apiKey = document.getElementById("apiKey").value;
  let bentuk = document.getElementById("bentuk").value;
- let opsi = document.getElementById("opsi").value;
  let jumlah = parseInt(document.getElementById("jumlah").value);
+ let opsi = document.getElementById("opsi").value || 4;
  let gambar = document.getElementById("gambar").checked;
  let output = document.getElementById("output");
 
- if(jumlah>20){alert("Max 20");return;}
+ if(!apiKey) return alert("Isi API key");
+ if(jumlah>20) return alert("Max 20 soal");
 
  output.innerHTML="Loading...";
+
+ let instruksi = "";
+
+ if(bentuk==="Essay"){
+  instruksi="Buat soal essay tanpa opsi.";
+ }
+ else if(bentuk==="Benar/Salah"){
+  instruksi="Opsi hanya Benar dan Salah.";
+ }
+ else{
+  instruksi=`Buat pilihan ganda dengan ${opsi} opsi.`;
+ }
 
  let res = await fetch("https://api.openai.com/v1/chat/completions",{
   method:"POST",
@@ -105,13 +189,16 @@ async function generate(){
    messages:[{
     role:"user",
     content:`
-Buat ${jumlah} soal tipe ${bentuk}.
+Kurikulum sekolah Indonesia.
 
-${bentuk==="Essay" ? "Tanpa opsi." : ""}
-${bentuk==="Benar/Salah" ? "Opsi hanya Benar dan Salah." : ""}
-${bentuk.includes("Pilihan") ? `Jumlah opsi: ${opsi}` : ""}
+Jenjang: ${jenjang.value}
+Mapel: ${mapel.value}
+Kelas: ${kelas.value}
+Materi: ${materi.value}
 
-FORMAT JSON:
+${instruksi}
+
+WAJIB JSON:
 [
 {"soal":"","opsi":["..."],"jawaban":"","deskripsi_gambar":""}
 ]
@@ -120,11 +207,11 @@ FORMAT JSON:
   })
  });
 
- let data = await res.json();
- let soal = extractJSON(data.choices[0].message.content);
+ let dataAI = await res.json();
+ let soal = parseJSON(dataAI.choices[0].message.content);
 
  if(!soal){
-  output.innerHTML="❌ Error parsing AI";
+  output.innerHTML="❌ Error AI";
   return;
  }
 
@@ -136,37 +223,34 @@ FORMAT JSON:
   let html = `<div class="soal"><b>${i+1}. ${s.soal}</b>`;
 
   if(bentuk!=="Essay" && s.opsi){
-    s.opsi.forEach(o=>{
-      html+=`<div>- ${o}</div>`;
-    });
+    s.opsi.forEach(o=>html+=`<div>- ${o}</div>`);
   }
 
   html+=`<br><i>Jawaban: ${s.jawaban}</i>`;
 
   if(gambar){
-    let img = await fetch("https://api.openai.com/v1/images/generations",{
-      method:"POST",
-      headers:{
-        "Authorization":"Bearer "+apiKey,
-        "Content-Type":"application/json"
-      },
-      body:JSON.stringify({
-        model:"gpt-image-1",
-        prompt:s.deskripsi_gambar || "ilustrasi edukasi",
-        size:"512x512"
-      })
-    });
+   let imgRes = await fetch("https://api.openai.com/v1/images/generations",{
+    method:"POST",
+    headers:{
+     "Authorization":"Bearer "+apiKey,
+     "Content-Type":"application/json"
+    },
+    body:JSON.stringify({
+     model:"gpt-image-1",
+     prompt:s.deskripsi_gambar || "ilustrasi pendidikan",
+     size:"512x512"
+    })
+   });
 
-    let imgData = await img.json();
-    html+=`<img src="${imgData.data[0].url}">`;
+   let imgData = await imgRes.json();
+   html+=`<img src="${imgData.data[0].url}">`;
   }
 
   html+=`</div>`;
   output.innerHTML+=html;
  }
-}
 
-updateOpsi();
+}
 
 </script>
 
