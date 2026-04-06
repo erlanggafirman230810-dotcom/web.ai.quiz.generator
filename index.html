@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generator Soal AI Master - DALL-E 3 Ready</title>
+    <title>Generator Soal AI Master - FIX 2026</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -43,11 +43,11 @@
             <div class="space-y-6 text-left">
                 <div>
                     <label class="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-2 block">Gemini API Key</label>
-                    <input type="password" id="gemini_key" placeholder="AIzaSy..." class="w-full px-4 py-3 bg-slate-50 rounded-xl outline-none border-none text-sm">
+                    <input type="password" id="gemini_key" placeholder="AIzaSy..." class="w-full px-4 py-3 bg-slate-50 rounded-xl outline-none border-none text-sm shadow-inner">
                 </div>
                 <div>
                     <label class="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-2 block">DALL-E 3 API Key (OpenAI)</label>
-                    <input type="password" id="openai_key" placeholder="sk-..." class="w-full px-4 py-3 bg-slate-50 rounded-xl outline-none border-none text-sm">
+                    <input type="password" id="openai_key" placeholder="sk-..." class="w-full px-4 py-3 bg-slate-50 rounded-xl outline-none border-none text-sm shadow-inner">
                 </div>
                 <button onclick="saveApiKeys()" class="w-full bg-indigo-600 text-white py-4 rounded-2xl font-bold hover:bg-indigo-700 shadow-xl transition-all">Simpan Konfigurasi</button>
             </div>
@@ -57,13 +57,13 @@
     <div class="max-w-6xl mx-auto bg-white p-6 md:p-10 rounded-[3rem] shadow-2xl border border-slate-100">
         <div class="flex justify-between items-center mb-12 border-b border-slate-50 pb-8 text-left">
             <div class="flex items-center gap-5">
-                <div class="bg-indigo-600 p-4 rounded-2xl text-white shadow-xl"><i data-lucide="sparkles"></i></div>
+                <div class="bg-indigo-600 p-4 rounded-2xl text-white shadow-xl"><i data-lucide="brain-circuit"></i></div>
                 <div>
-                    <h1 class="text-3xl font-black text-slate-900 tracking-tighter uppercase">AI Question Generator</h1>
-                    <p class="text-slate-500 font-medium text-sm">Sistem Otomatis Soal Taksonomi Bloom + Gambar AI</p>
+                    <h1 class="text-3xl font-black text-slate-900 tracking-tighter uppercase">Question AI Master</h1>
+                    <p class="text-slate-500 font-medium text-sm">Update Version 2026 - Stable Model</p>
                 </div>
             </div>
-            <button onclick="toggleModal()" class="p-3.5 bg-slate-50 text-slate-600 rounded-2xl hover:bg-indigo-50 border border-slate-100">
+            <button onclick="toggleModal()" class="p-3.5 bg-slate-50 text-slate-600 rounded-2xl hover:bg-indigo-50 border border-slate-100 transition-all">
                 <i data-lucide="settings"></i>
             </button>
         </div>
@@ -72,9 +72,9 @@
             <div class="space-y-10">
                 <section>
                     <h2 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-4">Identitas & Format</h2>
-                    <input type="text" id="mapel" placeholder="Mata Pelajaran (Contoh: IPA)" class="w-full p-4 bg-slate-50 rounded-2xl outline-none mb-4 font-bold text-sm border-none">
+                    <input type="text" id="mapel" placeholder="Mata Pelajaran (Contoh: Bahasa Indonesia)" class="w-full p-4 bg-slate-50 rounded-2xl outline-none mb-4 font-bold text-sm border-none">
                     
-                    <select id="kelas" class="w-full p-4 bg-slate-50 rounded-2xl outline-none font-bold text-sm mb-4">
+                    <select id="kelas" class="w-full p-4 bg-slate-50 rounded-2xl outline-none font-bold text-sm mb-4 border-none">
                         <option value="" disabled selected>Pilih Kelas</option>
                         <optgroup label="SD / MI">
                             <option>Kelas 1 SD/MI</option><option>Kelas 2 SD/MI</option><option>Kelas 3 SD/MI</option>
@@ -87,10 +87,10 @@
                     </select>
 
                     <div class="grid grid-cols-2 gap-4">
-                        <select id="jenisSoal" class="p-4 bg-slate-50 rounded-2xl outline-none font-bold text-sm">
+                        <select id="jenisSoal" class="p-4 bg-slate-50 rounded-2xl outline-none font-bold text-sm border-none">
                             <option>Pilihan Ganda</option><option>Isian</option><option>Essay</option>
                         </select>
-                        <select id="jumlahOpsi" class="p-4 bg-slate-50 rounded-2xl outline-none font-bold text-sm">
+                        <select id="jumlahOpsi" class="p-4 bg-slate-50 rounded-2xl outline-none font-bold text-sm border-none">
                             <option value="3">3 Opsi (A,B,C)</option>
                             <option value="4" selected>4 Opsi (A,B,C,D)</option>
                             <option value="5">5 Opsi (A,B,C,D,E)</option>
@@ -110,7 +110,7 @@
 
             <div class="space-y-10">
                 <section>
-                    <h2 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-4 font-bold">Level Kognitif (C1-C6)</h2>
+                    <h2 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-4 font-bold">Level Kognitif (Klik Kotak)</h2>
                     <div class="grid grid-cols-3 gap-3 mb-6">
                         <div class="kognitif-btn active" onclick="this.classList.toggle('active')" data-level="C1"><span>C1</span><strong>Mengingat</strong></div>
                         <div class="kognitif-btn active" onclick="this.classList.toggle('active')" data-level="C2"><span>C2</span><strong>Memahami</strong></div>
@@ -127,7 +127,7 @@
 
                 <section>
                     <h2 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-4">Cakupan Materi</h2>
-                    <textarea id="materiInput" class="w-full h-32 p-5 bg-slate-50 rounded-[2rem] outline-none text-sm font-medium resize-none border-none" placeholder="Masukkan kisi-kisi atau materi soal..."></textarea>
+                    <textarea id="materiInput" class="w-full h-32 p-5 bg-slate-50 rounded-[2rem] outline-none text-sm font-medium resize-none border-none shadow-inner" placeholder="Masukkan materi atau topik naskah soal..."></textarea>
                 </section>
 
                 <button id="btnGen" onclick="prosesGenerate()" class="w-full bg-indigo-600 text-white font-black py-5 rounded-[2rem] shadow-2xl hover:bg-indigo-700 transition-all text-lg flex justify-center gap-3 active:scale-95">
@@ -138,7 +138,7 @@
 
         <div id="containerHasil" class="hidden mt-12 p-8 bg-slate-900 rounded-[2rem] text-slate-100 text-left">
             <div class="flex justify-between items-center mb-6">
-                <h3 class="font-bold text-xl flex gap-2"><i data-lucide="file-text" class="text-indigo-400"></i> Naskah Soal AI</h3>
+                <h3 class="font-bold text-xl flex gap-2"><i data-lucide="file-text" class="text-indigo-400"></i> Naskah Soal Hasil AI</h3>
                 <button onclick="salinTeks()" class="bg-indigo-500 hover:bg-indigo-400 px-4 py-2 rounded-xl text-xs font-bold transition-all">Salin Teks</button>
             </div>
             <div id="hasilSoal" class="text-sm bg-slate-800 p-6 rounded-xl border border-slate-700 leading-relaxed overflow-x-auto"></div>
@@ -148,57 +148,53 @@
     <script>
         lucide.createIcons();
 
-        // Buka/Tutup Modal API
         function toggleModal() {
             document.getElementById('apiModal').classList.toggle('hidden');
             document.getElementById('gemini_key').value = localStorage.getItem('GEMINI_KEY') || '';
             document.getElementById('openai_key').value = localStorage.getItem('OPENAI_KEY') || '';
         }
 
-        // Simpan API Key
         function saveApiKeys() {
             localStorage.setItem('GEMINI_KEY', document.getElementById('gemini_key').value.trim());
             localStorage.setItem('OPENAI_KEY', document.getElementById('openai_key').value.trim());
             alert('API Keys berhasil disimpan!'); toggleModal();
         }
 
-        // Fungsi Generate Soal
         async function prosesGenerate() {
             const apiKey = localStorage.getItem('GEMINI_KEY');
-            if (!apiKey) { alert("Isi API Key Gemini di tombol Gerigi!"); toggleModal(); return; }
+            if (!apiKey) { alert("Isi API Key Gemini di pengaturan!"); toggleModal(); return; }
 
             const mapel = document.getElementById('mapel').value;
             const kelas = document.getElementById('kelas').value;
             const materi = document.getElementById('materiInput').value;
+            const levels = Array.from(document.querySelectorAll('.kognitif-btn.active')).map(el => el.getAttribute('data-level')).join(", ");
             
-            // Ambil Level C1-C6 yang berwarna UNGU (active)
-            const levels = Array.from(document.querySelectorAll('.kognitif-btn.active'))
-                                .map(el => el.getAttribute('data-level')).join(", ");
-            
-            if (!mapel || !materi || !levels) { alert("Lengkapi data dan pilih Level C1-C6!"); return; }
+            if (!mapel || !materi || !levels) { alert("Lengkapi Mapel, Materi, dan pilih Level C1-C6!"); return; }
 
             const btn = document.getElementById('btnGen');
-            btn.innerHTML = "Sedang Membuat..."; btn.disabled = true;
+            btn.innerHTML = "Sedang Memproses..."; btn.disabled = true;
 
-            const prompt = `Buatkan soal ${document.getElementById('jenisSoal').value} ${mapel} ${kelas}. Materi: ${materi}. Level Kognitif: ${levels}. Opsi: ${document.getElementById('jumlahOpsi').value}. Mudah(${document.getElementById('numMudah').value}), Sedang(${document.getElementById('numSedang').value}), Sulit(${document.getElementById('numSulit').value}). Wacana: ${document.getElementById('numWacana').value}. Sertakan kunci jawaban.`;
+            const prompt = `Buatkan soal ${document.getElementById('jenisSoal').value} ${mapel} ${kelas}. Materi: ${materi}. Level Kognitif: ${levels}. Opsi: ${document.getElementById('jumlahOpsi').value}. Distribusi: Mudah(${document.getElementById('numMudah').value}), Sedang(${document.getElementById('numSedang').value}), Sulit(${document.getElementById('numSulit').value}). Tambahkan wacana: ${document.getElementById('numWacana').value}. Sertakan kunci jawaban lengkap.`;
 
             try {
-                const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+                // FIX: Menggunakan API v1 dan model gemini-1.5-flash-latest yang lebih stabil
+                const res = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`, {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
                 });
+                
                 const data = await res.json();
                 
                 if(data.error) {
-                    alert("API Error: " + data.error.message);
+                    alert("Gagal: " + data.error.message);
                 } else {
                     document.getElementById('containerHasil').classList.remove('hidden');
                     document.getElementById('hasilSoal').innerText = data.candidates[0].content.parts[0].text;
                     window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
                 }
             } catch (err) {
-                alert("Gagal memanggil AI. Periksa koneksi.");
+                alert("Kesalahan koneksi atau API Key salah.");
             } finally {
                 btn.innerHTML = `<i data-lucide="zap"></i> Buat Naskah Soal`;
                 btn.disabled = false; lucide.createIcons();
