@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI Quiz Generator PRO</title>
+<title>AI Quiz Generator Full</title>
 
 <style>
 body {
@@ -12,42 +12,18 @@ body {
   color:#fff;
   padding:20px;
 }
-
 .container {
   max-width:900px;
   margin:auto;
   background: rgba(255,255,255,0.1);
-  backdrop-filter: blur(10px);
   padding:20px;
   border-radius:15px;
 }
-
-input,select,button {
+select {
   width:100%;
   margin-top:10px;
   padding:10px;
   border-radius:8px;
-  border:none;
-}
-
-button {
-  background:#00c6ff;
-  color:white;
-  font-weight:bold;
-  cursor:pointer;
-}
-
-.soal {
-  margin-top:20px;
-  padding:15px;
-  background: rgba(255,255,255,0.15);
-  border-radius:10px;
-}
-
-img {
-  width:100%;
-  margin-top:10px;
-  border-radius:10px;
 }
 </style>
 </head>
@@ -55,12 +31,11 @@ img {
 <body>
 
 <div class="container">
-<h2>AI Quiz Generator 🔥</h2>
-
-<input type="password" id="apiKey" placeholder="API Key">
+<h2>Generator Materi Lengkap 🔥</h2>
 
 <select id="jenjang">
 <option value="">Pilih Jenjang</option>
+<option>SD</option>
 <option>SMP</option>
 <option>SMA</option>
 </select>
@@ -69,186 +44,171 @@ img {
 <select id="kelas"></select>
 <select id="materi"></select>
 
-<select id="bentuk">
-<option>Pilihan Ganda</option>
-<option>Essay</option>
-<option>Benar/Salah</option>
-</select>
-
-<input type="number" id="jumlah" max="10" placeholder="Jumlah Soal (max 10)">
-
-<label>Soal Bergambar</label>
-<input type="checkbox" id="gambar" checked>
-
-<button onclick="generate()">Generate Soal</button>
-
-<div id="output"></div>
 </div>
 
 <script>
-// DATABASE
-const dataKurikulum = {
-  SMP: {
-    "Matematika": {
-      "7": ["Bilangan Bulat","Pecahan","Aljabar"],
-      "8": ["Relasi","SPLDV","Peluang"],
-      "9": ["Persamaan","Statistika"]
-    },
-    "IPA": {
-      "7": ["Organ Tubuh","Zat"],
-      "8": ["Tekanan","Pernapasan"],
-      "9": ["Listrik","Magnet"]
-    }
-  },
-  SMA: {
-    "Matematika": {
-      "10": ["Eksponen","Logaritma"],
-      "11": ["Limit","Turunan"],
-      "12": ["Integral"]
-    },
-    "Fisika": {
-      "10": ["Gerak","Newton"],
-      "11": ["Fluida","Termodinamika"],
-      "12": ["Listrik"]
-    }
-  }
+
+const data = {
+
+// ================= SD =================
+SD: {
+ "Matematika": {
+  "1":["Bilangan 1-100","Penjumlahan","Pengurangan","Perbandingan sederhana"],
+  "2":["Perkalian","Pembagian","Bangun Datar","Pengukuran"],
+  "3":["Pecahan","Keliling","Luas","Waktu"],
+  "4":["FPB","KPK","Sudut","Bangun Ruang","Simetri"],
+  "5":["Pecahan Lanjut","Volume","Skala","Kecepatan"],
+  "6":["Statistika","Perbandingan","Debit","Peluang sederhana"]
+ },
+ "IPA": {
+  "1":["Makhluk Hidup","Lingkungan"],
+  "2":["Energi","Gerak"],
+  "3":["Pertumbuhan","Ciri Makhluk Hidup"],
+  "4":["Gaya","Energi","Siklus Air"],
+  "5":["Sistem Organ","Rantai Makanan","Ekosistem"],
+  "6":["Listrik","Magnet","Tata Surya"]
+ },
+ "Bahasa Indonesia": {
+  "1":["Membaca","Menulis"],
+  "2":["Kalimat Sederhana","Kosakata"],
+  "3":["Paragraf","Cerita"],
+  "4":["Deskripsi","Narasi","Puisi"],
+  "5":["Pidato","Iklan","Surat"],
+  "6":["Laporan","Argumentasi","Diskusi"]
+ },
+ "PPKn": {
+  "1":["Aturan","Disiplin"],
+  "2":["Hak & Kewajiban"],
+  "3":["Kerjasama"],
+  "4":["Pancasila","Nilai Sosial"],
+  "5":["Persatuan","Keberagaman"],
+  "6":["Demokrasi","Hak Asasi"]
+ },
+ "IPS": {
+  "4":["Peta","Lingkungan"],
+  "5":["Sejarah Indonesia","Ekonomi sederhana"],
+  "6":["Globalisasi","Perdagangan"]
+ }
+},
+
+// ================= SMP =================
+SMP: {
+ "Matematika": {
+  "7":["Bilangan","Pecahan","Aljabar","Himpunan","Perbandingan","Aritmatika Sosial"],
+  "8":["Relasi","Fungsi","SPLDV","Peluang","Statistika","Bangun Ruang"],
+  "9":["Persamaan Linear","Transformasi","Statistika Lanjut","Peluang Lanjut"]
+ },
+ "IPA": {
+  "7":["Zat","Energi","Organ Tubuh","Klasifikasi Makhluk Hidup"],
+  "8":["Tekanan","Getaran","Pernapasan","Pencernaan"],
+  "9":["Listrik","Magnet","Bioteknologi","Lingkungan"]
+ },
+ "Bahasa Indonesia": {
+  "7":["Deskripsi","Narasi","Prosedur"],
+  "8":["Eksplanasi","Puisi","Persuasi"],
+  "9":["Argumentasi","Cerpen","Pidato"]
+ },
+ "Bahasa Inggris": {
+  "7":["Greeting","Simple Present","Descriptive"],
+  "8":["Past Tense","Procedure","Recount"],
+  "9":["Narrative","Passive","Report"]
+ },
+ "IPS": {
+  "7":["Geografi","Interaksi Sosial"],
+  "8":["Ekonomi","Sejarah"],
+  "9":["Globalisasi","Perdagangan"]
+ },
+ "PPKn": {
+  "7":["Norma","Pancasila"],
+  "8":["UUD","Demokrasi"],
+  "9":["HAM","Negara"]
+ }
+},
+
+// ================= SMA =================
+SMA: {
+ "Matematika": {
+  "10":["Eksponen","Logaritma","Fungsi","Persamaan Linear","Trigonometri dasar"],
+  "11":["Limit","Turunan","Barisan","Deret","Trigonometri lanjut"],
+  "12":["Integral","Statistika","Peluang","Program Linear"]
+ },
+ "Fisika": {
+  "10":["Gerak","Newton","Energi","Momentum"],
+  "11":["Fluida","Termodinamika","Gelombang","Optik"],
+  "12":["Listrik","Magnet","Induksi","Fisika Modern"]
+ },
+ "Kimia": {
+  "10":["Atom","Ikatan","Stoikiometri","Larutan"],
+  "11":["Termokimia","Laju Reaksi","Kesetimbangan","Koloid"],
+  "12":["Asam Basa","Elektrokimia","Kimia Organik"]
+ },
+ "Biologi": {
+  "10":["Sel","Jaringan","Organ","Klasifikasi"],
+  "11":["Pernapasan","Pencernaan","Ekskresi","Saraf"],
+  "12":["Genetika","Evolusi","Bioteknologi"]
+ },
+ "Ekonomi": {
+  "10":["Konsep Ekonomi","Permintaan","Penawaran"],
+  "11":["Pasar","Pendapatan Nasional"],
+  "12":["APBN","Perdagangan Internasional"]
+ },
+ "Geografi": {
+  "10":["Litosfer","Atmosfer"],
+  "11":["Hidrosfer","Peta"],
+  "12":["Lingkungan","Bencana"]
+ },
+ "Sosiologi": {
+  "10":["Interaksi Sosial"],
+  "11":["Kelompok Sosial"],
+  "12":["Perubahan Sosial"]
+ },
+ "Sejarah": {
+  "10":["Sejarah Dunia"],
+  "11":["Kolonialisme"],
+  "12":["Kemerdekaan Indonesia"]
+ },
+ "PPKn": {
+  "10":["Pancasila"],
+  "11":["UUD"],
+  "12":["Demokrasi"]
+ }
+}
+
 };
 
-// ELEMENT
+// DROPDOWN LOGIC
 const jenjang = document.getElementById("jenjang");
 const mapel = document.getElementById("mapel");
 const kelas = document.getElementById("kelas");
 const materi = document.getElementById("materi");
-const output = document.getElementById("output");
 
-// JENJANG → MAPEL
 jenjang.onchange = () => {
-  mapel.innerHTML="";
-  kelas.innerHTML="";
-  materi.innerHTML="";
-  Object.keys(dataKurikulum[jenjang.value]||{}).forEach(m=>{
-    let o=document.createElement("option");
-    o.textContent=m;
-    mapel.appendChild(o);
-  });
-};
-
-// MAPEL → KELAS
-mapel.onchange = () => {
-  kelas.innerHTML="";
-  materi.innerHTML="";
-  Object.keys(dataKurikulum[jenjang.value][mapel.value]).forEach(k=>{
-    let o=document.createElement("option");
-    o.textContent=k;
-    kelas.appendChild(o);
-  });
-};
-
-// KELAS → MATERI
-kelas.onchange = () => {
-  materi.innerHTML="";
-  dataKurikulum[jenjang.value][mapel.value][kelas.value].forEach(m=>{
-    let o=document.createElement("option");
-    o.textContent=m;
-    materi.appendChild(o);
-  });
-};
-
-// PARSE AMAN
-function extractJSON(text){
- try {
-  return JSON.parse(text);
- } catch {
-  try {
-    const match = text.match(/\[\s*{[\s\S]*}\s*\]/);
-    if(match) return JSON.parse(match[0]);
-  } catch {}
-  return null;
- }
-}
-
-// GENERATE
-async function generate(){
- const apiKey = document.getElementById("apiKey").value;
-
- output.innerHTML="Loading...";
-
- const res = await fetch("https://api.openai.com/v1/chat/completions",{
-  method:"POST",
-  headers:{
-   "Authorization":"Bearer "+apiKey,
-   "Content-Type":"application/json"
-  },
-  body:JSON.stringify({
-   model:"gpt-4o-mini",
-   messages:[{
-    role:"user",
-    content:`
-KELUARKAN HANYA JSON!
-
-Format:
-[
-{
-"soal":"...",
-"opsi":["A","B","C","D"],
-"jawaban":"...",
-"deskripsi_gambar":"..."
-}
-]
-
-Buat ${jumlah.value} soal ${mapel.value} materi ${materi.value}.
-`
-   }]
-  })
+ mapel.innerHTML=""; kelas.innerHTML=""; materi.innerHTML="";
+ Object.keys(data[jenjang.value]||{}).forEach(m=>{
+  let o=document.createElement("option");
+  o.textContent=m;
+  mapel.appendChild(o);
  });
+};
 
- const data = await res.json();
+mapel.onchange = () => {
+ kelas.innerHTML=""; materi.innerHTML="";
+ Object.keys(data[jenjang.value][mapel.value]).forEach(k=>{
+  let o=document.createElement("option");
+  o.textContent=k;
+  kelas.appendChild(o);
+ });
+};
 
- const soalJSON = extractJSON(data.choices[0].message.content);
+kelas.onchange = () => {
+ materi.innerHTML="";
+ data[jenjang.value][mapel.value][kelas.value].forEach(m=>{
+  let o=document.createElement("option");
+  o.textContent=m;
+  materi.appendChild(o);
+ });
+};
 
- if(!soalJSON){
-  output.innerHTML="❌ AI error, coba lagi";
-  return;
- }
-
- output.innerHTML="";
-
- for(let i=0;i<soalJSON.length;i++){
-  let s = soalJSON[i];
-
-  let html = `<div class="soal">
-  <b>${i+1}. ${s.soal}</b>`;
-
-  if(s.opsi){
-    s.opsi.forEach(o=>{
-      html += `<div>- ${o}</div>`;
-    });
-  }
-
-  html += `<br><i>Jawaban: ${s.jawaban}</i>`;
-
-  if(gambar.checked){
-    const imgRes = await fetch("https://api.openai.com/v1/images/generations",{
-      method:"POST",
-      headers:{
-        "Authorization":"Bearer "+apiKey,
-        "Content-Type":"application/json"
-      },
-      body:JSON.stringify({
-        model:"gpt-image-1",
-        prompt:s.deskripsi_gambar,
-        size:"512x512"
-      })
-    });
-
-    const imgData = await imgRes.json();
-    html += `<img src="${imgData.data[0].url}">`;
-  }
-
-  html += `</div>`;
-  output.innerHTML += html;
- }
-}
 </script>
 
 </body>
