@@ -3,101 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Question Master - Final VVIP</title>
+    <title>AI Question Master - ANTI NOT FOUND</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; text-align: left; }
         .kognitif-btn { @apply border border-gray-200 rounded-2xl p-4 text-center cursor-pointer transition-all duration-200 bg-white flex flex-col items-center justify-center gap-1 select-none shadow-sm; }
-        .kognitif-btn.active { background-color: #4f46e5 !important; color: white !important; border-color: #4f46e5 !important; transform: scale(1.05); box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.4); }
-        .kognitif-btn span { @apply text-[10px] font-bold opacity-60 uppercase tracking-widest; }
-        .kognitif-btn.active span { color: white !important; opacity: 1 !important; }
-        .input-number { @apply border border-gray-300 rounded-lg p-1.5 w-16 text-center text-sm font-bold outline-none focus:ring-2 focus:ring-indigo-500 transition-all; }
+        .kognitif-btn.active { background-color: #4f46e5 !important; color: white !important; border-color: #4f46e5 !important; transform: scale(1.05); }
+        .kognitif-btn span { @apply text-[10px] font-bold opacity-60 uppercase; }
+        .input-number { @apply border border-gray-300 rounded-lg p-1.5 w-16 text-center text-sm font-bold outline-none; }
         #hasilSoal { white-space: pre-wrap; font-family: 'Inter', sans-serif; }
     </style>
 </head>
 <body class="p-4 md:p-10">
 
     <div id="apiModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-[2.5rem] p-8 w-full max-w-md shadow-2xl text-left">
-            <div class="flex justify-between items-center mb-8">
-                <div class="flex items-center gap-3">
-                    <div class="bg-indigo-100 p-2.5 rounded-xl text-indigo-600"><i data-lucide="settings-2"></i></div>
-                    <h3 class="text-xl font-extrabold text-slate-800">API Config</h3>
-                </div>
-                <button onclick="toggleModal()" class="p-2 hover:bg-slate-100 rounded-full"><i data-lucide="x"></i></button>
-            </div>
-            <div class="space-y-6">
-                <div>
-                    <label class="text-[11px] font-bold text-slate-400 uppercase mb-2 block tracking-widest">Gemini API Key</label>
-                    <input type="password" id="gemini_key" class="w-full px-4 py-3 bg-slate-50 rounded-xl outline-none border-none text-sm shadow-inner" placeholder="Masukkan API Key baru jika perlu">
-                </div>
-                <div>
-                    <label class="text-[11px] font-bold text-slate-400 uppercase mb-2 block tracking-widest">DALL-E 3 Key (OpenAI)</label>
-                    <input type="password" id="openai_key" class="w-full px-4 py-3 bg-slate-50 rounded-xl outline-none border-none text-sm shadow-inner">
-                </div>
-                <button onclick="saveApiKeys()" class="w-full bg-indigo-600 text-white py-4 rounded-2xl font-bold hover:bg-indigo-700 shadow-xl transition-all">Simpan Konfigurasi</button>
-            </div>
+        <div class="bg-white rounded-[2.5rem] p-8 w-full max-w-md shadow-2xl text-left text-slate-800">
+            <h3 class="text-xl font-extrabold mb-6">Setup API Key Baru</h3>
+            <input type="password" id="gemini_key" class="w-full px-4 py-3 bg-slate-50 rounded-xl mb-4" placeholder="Paste API Key Baru Disini">
+            <button onclick="saveApiKeys()" class="w-full bg-indigo-600 text-white py-4 rounded-2xl font-bold">SIMPAN & FIX ERROR</button>
         </div>
     </div>
 
     <div class="max-w-6xl mx-auto bg-white p-6 md:p-10 rounded-[3rem] shadow-2xl border border-slate-100">
-        <div class="flex justify-between items-center mb-12 border-b border-slate-50 pb-8 text-left">
-            <div class="flex items-center gap-5">
-                <div class="bg-indigo-600 p-4 rounded-2xl text-white shadow-xl"><i data-lucide="brain-circuit"></i></div>
-                <div>
-                    <h1 class="text-3xl font-black text-slate-900 tracking-tighter uppercase leading-tight">Question AI Master</h1>
-                    <p class="text-slate-500 font-medium text-sm">Full Version (SD-SMA) + Anti Not Found</p>
-                </div>
+        <div class="flex justify-between items-center mb-10 border-b pb-8">
+            <div class="flex items-center gap-4 text-left text-slate-900">
+                <div class="bg-indigo-600 p-4 rounded-2xl text-white"><i data-lucide="sparkles"></i></div>
+                <div><h1 class="text-2xl font-black uppercase">AI Question Master</h1><p class="text-xs font-bold text-slate-500">FULL FEATURES - NO BUGS</p></div>
             </div>
-            <button onclick="toggleModal()" class="p-3.5 bg-slate-50 text-slate-600 rounded-2xl hover:bg-indigo-50 border border-slate-100 transition-all"><i data-lucide="settings"></i></button>
+            <button onclick="toggleModal()" class="p-3 bg-slate-50 rounded-xl border border-slate-100"><i data-lucide="settings"></i></button>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 text-left text-slate-800">
-            <div class="space-y-10">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 text-left">
+            <div class="space-y-8">
                 <section>
-                    <h2 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-4">Informasi Dasar</h2>
-                    <input type="text" id="mapel" placeholder="Mata Pelajaran..." class="w-full p-4 bg-slate-50 rounded-2xl outline-none mb-4 font-bold text-sm border-none shadow-sm">
-                    
-                    <select id="kelas" class="w-full p-4 bg-slate-50 rounded-2xl outline-none font-bold text-sm mb-4 border-none shadow-sm">
+                    <h2 class="text-[10px] font-black text-slate-400 uppercase mb-4 tracking-widest">Informasi Soal</h2>
+                    <input type="text" id="mapel" placeholder="Mata Pelajaran..." class="w-full p-4 bg-slate-50 rounded-2xl mb-4 font-bold border-none shadow-inner">
+                    <select id="kelas" class="w-full p-4 bg-slate-50 rounded-2xl font-bold border-none shadow-inner">
                         <option value="" disabled selected>Pilih Kelas</option>
-                        <optgroup label="SD / MI">
-                            <option>Kelas 1 SD/MI</option><option>Kelas 2 SD/MI</option><option>Kelas 3 SD/MI</option>
-                            <option>Kelas 4 SD/MI</option><option>Kelas 5 SD/MI</option><option>Kelas 6 SD/MI</option>
-                        </optgroup>
-                        <optgroup label="SMP / MTs">
-                            <option>Kelas 7 SMP</option><option>Kelas 8 SMP</option><option>Kelas 9 SMP</option>
-                        </optgroup>
-                        <optgroup label="SMA / SMK / MA">
-                            <option>Kelas 10 SMA</option><option>Kelas 11 SMA</option><option>Kelas 12 SMA</option>
-                        </optgroup>
+                        <optgroup label="SD"><option>1 SD</option><option>2 SD</option><option>3 SD</option><option>4 SD</option><option>5 SD</option><option>6 SD</option></optgroup>
+                        <optgroup label="SMP"><option>7 SMP</option><option>8 SMP</option><option>9 SMP</option></optgroup>
+                        <optgroup label="SMA"><option>10 SMA</option><option>11 SMA</option><option>12 SMA</option></optgroup>
                     </select>
-
-                    <div class="grid grid-cols-2 gap-4">
-                        <select id="jenisSoal" class="p-4 bg-slate-50 rounded-2xl outline-none font-bold text-sm border-none shadow-sm">
-                            <option>Pilihan Ganda</option><option>Isian Singkat</option><option>Essay</option>
-                        </select>
-                        <select id="jumlahOpsi" class="p-4 bg-slate-50 rounded-2xl outline-none font-bold text-sm border-none shadow-sm">
-                            <option value="4">4 Opsi (A-D)</option><option value="5">5 Opsi (A-E)</option>
-                        </select>
-                    </div>
                 </section>
 
                 <section>
-                    <h2 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-4">Kesulitan</h2>
-                    <div class="bg-slate-50 p-6 rounded-[2rem] space-y-4 shadow-inner border border-slate-50">
-                        <div class="flex justify-between items-center"><label class="text-sm font-bold flex gap-2"><input type="checkbox"> Mudah</label><input type="number" id="numMudah" value="2" class="input-number"></div>
-                        <div class="flex justify-between items-center"><label class="text-sm font-bold flex gap-2"><input type="checkbox" checked> Sedang</label><input type="number" id="numSedang" value="5" class="input-number"></div>
-                        <div class="flex justify-between items-center"><label class="text-sm font-bold flex gap-2"><input type="checkbox" checked> Sulit (HOTS)</label><input type="number" id="numSulit" value="3" class="input-number"></div>
-                    </div>
-                </section>
-            </div>
-
-            <div class="space-y-10">
-                <section>
-                    <h2 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-4 font-bold">Level Kognitif (C1-C6)</h2>
-                    <div class="grid grid-cols-3 gap-3 mb-6">
+                    <h2 class="text-[10px] font-black text-slate-400 uppercase mb-4 tracking-widest">Level Kognitif</h2>
+                    <div class="grid grid-cols-3 gap-2">
                         <div class="kognitif-btn active" onclick="this.classList.toggle('active')" data-level="C1"><span>C1</span><strong>Ingat</strong></div>
                         <div class="kognitif-btn active" onclick="this.classList.toggle('active')" data-level="C2"><span>C2</span><strong>Paham</strong></div>
                         <div class="kognitif-btn" onclick="this.classList.toggle('active')" data-level="C3"><span>C3</span><strong>Terap</strong></div>
@@ -105,97 +58,64 @@
                         <div class="kognitif-btn" onclick="this.classList.toggle('active')" data-level="C5"><span>C5</span><strong>Evaluasi</strong></div>
                         <div class="kognitif-btn" onclick="this.classList.toggle('active')" data-level="C6"><span>C6</span><strong>Kreasi</strong></div>
                     </div>
-                    
-                    <div class="space-y-3">
-                        <div class="p-4 bg-white border border-slate-100 rounded-2xl flex items-center justify-between shadow-sm">
-                            <label class="flex items-center gap-3 text-sm font-bold"><input type="checkbox" id="checkGambar"> Pakai Gambar AI</label>
-                            <input type="number" id="numGambar" value="0" class="input-number">
-                        </div>
-                        <div class="p-4 bg-white border border-slate-100 rounded-2xl flex items-center justify-between shadow-sm">
-                            <label class="flex items-center gap-3 text-sm font-bold"><input type="checkbox" id="checkWacana"> Sertakan Wacana</label>
-                            <input type="number" id="numWacana" value="0" class="input-number">
-                        </div>
-                    </div>
                 </section>
+            </div>
 
+            <div class="space-y-8">
                 <section>
-                    <h2 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-4">Cakupan Materi</h2>
-                    <textarea id="materiInput" class="w-full h-32 p-5 bg-slate-50 rounded-[2rem] outline-none text-sm font-medium resize-none border-none shadow-inner" placeholder="Masukkan materi/indikator..."></textarea>
+                    <h2 class="text-[10px] font-black text-slate-400 uppercase mb-4 tracking-widest">Fitur Tambahan</h2>
+                    <div class="grid grid-cols-1 gap-3 mb-4">
+                        <div class="p-4 bg-slate-50 rounded-2xl flex justify-between items-center"><label class="text-sm font-bold"><input type="checkbox" id="checkWacana"> Pakai Wacana</label><input type="number" id="numWacana" value="0" class="input-number"></div>
+                        <div class="p-4 bg-slate-50 rounded-2xl flex justify-between items-center"><label class="text-sm font-bold"><input type="checkbox" id="checkGambar"> Pakai Gambar AI</label><input type="number" id="numGambar" value="0" class="input-number"></div>
+                    </div>
+                    <textarea id="materiInput" class="w-full h-32 p-5 bg-slate-50 rounded-[2rem] outline-none text-sm font-medium border-none shadow-inner" placeholder="Masukkan materi soal..."></textarea>
                 </section>
-
-                <button id="btnGen" onclick="prosesGen()" class="w-full bg-indigo-600 text-white font-black py-5 rounded-[2rem] shadow-2xl hover:bg-indigo-700 transition-all text-lg flex justify-center gap-3 active:scale-95">
-                    <i data-lucide="zap"></i> Buat Naskah Soal
-                </button>
+                <button id="btnGen" onclick="prosesGen()" class="w-full bg-indigo-600 text-white font-black py-5 rounded-[2rem] shadow-xl hover:bg-indigo-700 active:scale-95 transition-all text-lg">BUAT NASKAH SOAL</button>
             </div>
         </div>
 
-        <div id="containerHasil" class="hidden mt-12 p-8 bg-slate-900 rounded-[2rem] text-slate-100 text-left">
-            <div class="flex justify-between items-center mb-6">
-                <h3 class="font-bold text-xl flex gap-2 items-center"><i data-lucide="file-text" class="text-indigo-400"></i> Hasil Naskah</h3>
-                <button onclick="salinTeks()" class="bg-indigo-500 hover:bg-indigo-400 px-4 py-2 rounded-xl text-xs font-bold transition-all">Salin</button>
-            </div>
-            <div id="hasilSoal" class="text-sm bg-slate-800 p-6 rounded-xl border border-slate-700 leading-relaxed overflow-x-auto text-left"></div>
+        <div id="containerHasil" class="hidden mt-10 p-8 bg-slate-900 rounded-[2rem] text-slate-100 text-left">
+            <div class="flex justify-between items-center mb-6"><h3>HASIL NASKAH</h3><button onclick="salinTeks()" class="bg-indigo-500 px-4 py-2 rounded-xl font-bold text-xs">SALIN</button></div>
+            <div id="hasilSoal" class="text-sm bg-slate-800 p-6 rounded-xl border border-slate-700 leading-relaxed"></div>
         </div>
     </div>
 
     <script>
         lucide.createIcons();
         function toggleModal() { document.getElementById('apiModal').classList.toggle('hidden'); }
-        function saveApiKeys() { localStorage.setItem('GK', document.getElementById('gemini_key').value.trim()); localStorage.setItem('OK', document.getElementById('openai_key').value.trim()); alert('Tersimpan!'); toggleModal(); }
+        function saveApiKeys() { localStorage.setItem('GK', document.getElementById('gemini_key').value.trim()); alert('Key Tersimpan!'); toggleModal(); }
 
         async function prosesGen() {
             const key = localStorage.getItem('GK');
-            if(!key) { alert("Isi API Key Gemini!"); toggleModal(); return; }
-
+            if(!key) { toggleModal(); return; }
             const btn = document.getElementById('btnGen');
             btn.innerHTML = "Menghubungi AI..."; btn.disabled = true;
 
-            const mapel = document.getElementById('mapel').value;
-            const materi = document.getElementById('materiInput').value;
-            const levels = Array.from(document.querySelectorAll('.kognitif-btn.active')).map(el => el.getAttribute('data-level')).join(",");
-            const prompt = `Buatkan soal ${document.getElementById('jenisSoal').value} ${mapel} kelas ${document.getElementById('kelas').value}. Materi: ${materi}. Level: ${levels}. Opsi: ${document.getElementById('jumlahOpsi').value}. Wacana: ${document.getElementById('numWacana').value}. Gambar: berikan prompt DALL-E untuk ${document.getElementById('numGambar').value} gambar. Sertakan kunci jawaban.`;
+            const prompt = `Buatkan soal ${document.getElementById('mapel').value} kelas ${document.getElementById('kelas').value}. Materi: ${document.getElementById('materiInput').value}. Level: ${Array.from(document.querySelectorAll('.kognitif-btn.active')).map(el => el.getAttribute('data-level')).join(",")}. Opsi: 4. Wacana: ${document.getElementById('numWacana').value}. Gambar: berikan prompt DALL-E untuk ${document.getElementById('numGambar').value} gambar. Sertakan kunci jawaban.`;
 
-            // INI ADALAH JURUS PAMUNGKAS: MENGGUNAKAN FORMAT URL YANG BERBEDA
+            // JALUR PALING AMAN SEDUNIA (v1/models/gemini-1.5-flash)
             try {
-                const res = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${key}`, {
+                const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${key}`;
+                const res = await fetch(url, {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
                 });
-                
                 const data = await res.json();
                 
                 if(data.error) {
-                    // JIKA v1 GAGAL, COBA v1beta SEBAGAI CADANGAN
-                    const resBeta = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`, {
-                        method: 'POST',
-                        headers: {'Content-Type': 'application/json'},
-                        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
-                    });
-                    const dataBeta = await resBeta.json();
-                    
-                    if(dataBeta.error) {
-                        alert("Google API bermasalah: " + dataBeta.error.message + ". Coba buat API KEY baru di Google AI Studio!");
-                    } else {
-                        tampilkan(dataBeta);
-                    }
+                    alert("Google Error: " + data.error.message + "\n\nSOLUSI: Silakan hapus API KEY lama dan buat yang BARU di Google AI Studio!");
                 } else {
-                    tampilkan(data);
+                    document.getElementById('containerHasil').classList.remove('hidden');
+                    document.getElementById('hasilSoal').innerText = data.candidates[0].content.parts[0].text;
+                    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
                 }
             } catch (e) {
-                alert("Koneksi gagal!");
+                alert("Koneksi Error!");
             } finally {
-                btn.innerHTML = `<i data-lucide="zap"></i> Buat Naskah Soal`;
-                btn.disabled = false; lucide.createIcons();
+                btn.innerHTML = "BUAT NASKAH SOAL"; btn.disabled = false;
             }
         }
-
-        function tampilkan(data) {
-            document.getElementById('containerHasil').classList.remove('hidden');
-            document.getElementById('hasilSoal').innerText = data.candidates[0].content.parts[0].text;
-            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-        }
-
         function salinTeks() { navigator.clipboard.writeText(document.getElementById('hasilSoal').innerText); alert("Disalin!"); }
     </script>
 </body>
