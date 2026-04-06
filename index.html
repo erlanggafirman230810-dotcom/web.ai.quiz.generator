@@ -138,64 +138,79 @@
         </div>
     </div>
 
-    <script>
-        lucide.createIcons();
+   <script>
+    lucide.createIcons();
 
-        function toggleModal() {
-            document.getElementById('apiModal').classList.toggle('hidden');
-            document.getElementById('gemini_key').value = localStorage.getItem('GK') || '';
-            document.getElementById('openai_key').value = localStorage.getItem('OK') || '';
-        }
+    function toggleModal() {
+        document.getElementById('apiModal').classList.toggle('hidden');
+        document.getElementById('gemini_key').value = localStorage.getItem('GK') || '';
+        document.getElementById('openai_key').value = localStorage.getItem('OK') || '';
+    }
 
-        function saveApiKeys() {
-            localStorage.setItem('GK', document.getElementById('gemini_key').value.trim());
-            localStorage.setItem('OK', document.getElementById('openai_key').value.trim());
-            alert('API Keys tersimpan!'); toggleModal();
-        }
+    function saveApiKeys() {
+        localStorage.setItem('GK', document.getElementById('gemini_key').value.trim());
+        localStorage.setItem('OK', document.getElementById('openai_key').value.trim());
+        alert('API Keys tersimpan!'); toggleModal();
+    }
 
-        async function prosesGen() {
-            const key = localStorage.getItem('GK');
-            if(!key) { alert("Isi API Key Gemini di Pengaturan!"); toggleModal(); return; }
+    async function prosesGen() {
+        const key = localStorage.getItem('GK');
+        if(!key) { alert("Isi API Key Gemini di Pengaturan!"); toggleModal(); return; }
 
-            const mapel = document.getElementById('mapel').value;
-            const materi = document.getElementById('materiInput').value;
-            const levels = Array.from(document.querySelectorAll('.kognitif-btn.active')).map(el => el.getAttribute('data-level')).join(",");
+        const mapel = document.getElementById('mapel').value;
+        const materi = document.getElementById('materiInput').value;
+        const levels = Array.from(document.querySelectorAll('.kognitif-btn.active')).map(el => el.getAttribute('data-level')).join(",");
+        
+        if(!mapel || !materi || !levels) { alert("Lengkapi Mapel, Materi, dan Level!"); return; }
+
+        const btn = document.getElementById('btnGen');
+        btn.innerHTML = "Processing..."; btn.disabled = true;
+
+        const prompt = `Buatkan soal ${document.getElementById('jenisSoal').value} ${mapel} kelas ${document.getElementById('kelas').value}. Materi: ${materi}. Level Kognitif: ${levels}. Opsi: ${document.getElementById('jumlahOpsi').value}. Wacana: ${document.getElementById('numWacana').value}. Gambar: berikan prompt DALL-E untuk ${document.getElementById('numGambar').value} gambar. Sertakan kunci jawaban.`;
+
+        try {
+            // JALUR PALING AMAN: Pakai gemini-pro (Model paling stabil di dunia)
+            const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${key}`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+            });
             
-            if(!mapel || !materi || !levels) { alert("Lengkapi Mapel, Materi, dan Level!"); return; }
-
-            const btn = document.getElementById('btnGen');
-            btn.innerHTML = "Processing..."; btn.disabled = true;
-
-            const prompt = `Buatkan soal ${document.getElementById('jenisSoal').value} ${mapel} kelas ${document.getElementById('kelas').value}. Materi: ${materi}. Level Kognitif: ${levels}. Opsi: ${document.getElementById('jumlahOpsi').value}. Wacana: ${document.getElementById('numWacana').value}. Gambar: berikan prompt DALL-E untuk ${document.getElementById('numGambar').value} gambar. Sertakan kunci jawaban.`;
-
-            try {
-                // Jalur v1beta + gemini-1.5-flash (paling aman buat akun baru)
-                const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`, {
+            const data = await res.json();
+            
+            if(data.error) {
+                // KALAU MASIH ERROR, KITA PAKAI JALUR DARURAT (Flash v1beta tanpa embel-embel)
+                const resRetry = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${key}`, {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
                 });
+                const dataRetry = await resRetry.json();
                 
-                const data = await res.json();
-                if(data.error) {
-                    alert("Error dari Google: " + data.error.message);
+                if(dataRetry.error) {
+                    alert("ERROR GOOGLE: " + dataRetry.error.message);
                 } else {
-                    document.getElementById('containerHasil').classList.remove('hidden');
-                    document.getElementById('hasilSoal').innerText = data.candidates[0].content.parts[0].text;
-                    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+                    tampilkanHasil(dataRetry);
                 }
-            } catch (e) {
-                alert("Gagal memproses AI!");
-            } finally {
-                btn.innerHTML = `<i data-lucide="zap"></i> Buat Naskah Soal`;
-                btn.disabled = false; lucide.createIcons();
+            } else {
+                tampilkanHasil(data);
             }
+        } catch (e) {
+            alert("Gagal memproses AI! Cek koneksi internet.");
+        } finally {
+            btn.innerHTML = `<i data-lucide="zap"></i> Buat Naskah Soal`;
+            btn.disabled = false; lucide.createIcons();
         }
+    }
 
-        function salinTeks() {
-            navigator.clipboard.writeText(document.getElementById('hasilSoal').innerText);
-            alert("Naskah disalin!");
-        }
-    </script>
-</body>
-</html>
+    function tampilkanHasil(data) {
+        document.getElementById('containerHasil').classList.remove('hidden');
+        document.getElementById('hasilSoal').innerText = data.candidates[0].content.parts[0].text;
+        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    }
+
+    function salinTeks() {
+        navigator.clipboard.writeText(document.getElementById('hasilSoal').innerText);
+        alert("Naskah disalin!");
+    }
+</script>
