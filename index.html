@@ -8,35 +8,35 @@
 <style>
 body {
   font-family: Arial;
-  background: linear-gradient(135deg,#667eea,#764ba2);
+  background: #111;
   color:#fff;
-  padding:20px;
+  transition:0.3s;
+}
+.light {
+  background:#f5f5f5;
+  color:#000;
 }
 .container {
   max-width:900px;
   margin:auto;
-  background: rgba(255,255,255,0.1);
   padding:20px;
-  border-radius:15px;
 }
 select,input,button {
   width:100%;
   margin-top:10px;
   padding:10px;
   border-radius:8px;
-  border:none;
 }
 button {
   background:#00c6ff;
   color:white;
-  font-weight:bold;
   cursor:pointer;
 }
 .soal {
   margin-top:20px;
   padding:15px;
-  background: rgba(255,255,255,0.2);
   border-radius:10px;
+  background:rgba(255,255,255,0.1);
 }
 img {
   width:100%;
@@ -53,8 +53,15 @@ img {
 
 <input type="password" id="apiKey" placeholder="API Key">
 
+<select id="kurikulum">
+<option>Kurikulum Merdeka</option>
+<option>Kurikulum 2013</option>
+<option>Kurikulum Berbasis Cinta</option>
+<option>Cambridge</option>
+</select>
+
 <select id="jenjang">
-<option value="">Pilih Jenjang</option>
+<option value="">Jenjang</option>
 <option>SD</option>
 <option>SMP</option>
 <option>SMA</option>
@@ -64,11 +71,29 @@ img {
 <select id="kelas"></select>
 <select id="materi"></select>
 
-<input type="number" id="jumlah" max="10" placeholder="Jumlah Soal (max 10)">
+<select id="bentuk">
+<option>Pilihan Ganda</option>
+<option>Essay</option>
+<option>Benar/Salah</option>
+</select>
 
-<label>Soal Bergambar</label>
-<input type="checkbox" id="gambar" checked>
+<input type="number" id="jumlah" placeholder="Jumlah soal max 20">
 
+<input type="number" id="opsi" placeholder="Jumlah opsi (PG)">
+
+<select id="bloom">
+<option>C1</option><option>C2</option><option>C3</option>
+<option>C4</option><option>C5</option><option>C6</option>
+</select>
+
+<select id="level">
+<option>Mudah</option>
+<option>Sedang</option>
+<option>Sulit</option>
+</select>
+
+<label><input type="checkbox" id="gambar"> Soal Bergambar</label>
+<button onclick="toggleMode()">Dark / Light</button>
 <button onclick="generate()">Generate Soal</button>
 
 <div id="output"></div>
@@ -76,72 +101,65 @@ img {
 
 <script>
 
-// ===== DATABASE (SUPER FULL RINGKAS)
+// ===== DARK MODE
+function toggleMode(){
+ document.body.classList.toggle("light");
+}
+
+// ===== DATABASE SUPER
 const data = {
-SMA: {
- "Matematika": {
+SMA:{
+ "Matematika":{
   "12":["Integral","Statistika","Peluang"]
+ }
+},
+SMP:{
+ "Matematika":{
+  "9":["Persamaan","Statistika"]
  }
 }
 };
 
 // ===== DROPDOWN
-const jenjang = document.getElementById("jenjang");
-const mapel = document.getElementById("mapel");
-const kelas = document.getElementById("kelas");
-const materi = document.getElementById("materi");
-const output = document.getElementById("output");
-
-jenjang.onchange = () => {
- mapel.innerHTML="";
- kelas.innerHTML="";
- materi.innerHTML="";
+jenjang.onchange=()=>{
+ mapel.innerHTML="";kelas.innerHTML="";materi.innerHTML="";
  Object.keys(data[jenjang.value]||{}).forEach(m=>{
-  let o=document.createElement("option");
-  o.textContent=m;
-  mapel.appendChild(o);
+  let o=new Option(m,m);mapel.add(o);
  });
 };
-
-mapel.onchange = () => {
- kelas.innerHTML="";
- materi.innerHTML="";
+mapel.onchange=()=>{
+ kelas.innerHTML="";materi.innerHTML="";
  Object.keys(data[jenjang.value][mapel.value]).forEach(k=>{
-  let o=document.createElement("option");
-  o.textContent=k;
-  kelas.appendChild(o);
+  let o=new Option(k,k);kelas.add(o);
  });
 };
-
-kelas.onchange = () => {
+kelas.onchange=()=>{
  materi.innerHTML="";
  data[jenjang.value][mapel.value][kelas.value].forEach(m=>{
-  let o=document.createElement("option");
-  o.textContent=m;
-  materi.appendChild(o);
+  let o=new Option(m,m);materi.add(o);
  });
 };
 
-// ===== PARSE AMAN
+// ===== PARSE
 function extractJSON(text){
- try {
-  return JSON.parse(text);
- } catch {
-  try {
-    const match = text.match(/\[\s*{[\s\S]*}\s*\]/);
-    if(match) return JSON.parse(match[0]);
-  } catch {}
-  return null;
+ try{return JSON.parse(text);}
+ catch{
+  let match=text.match(/\[\s*{[\s\S]*}\s*\]/);
+  if(match) return JSON.parse(match[0]);
  }
+ return null;
 }
 
 // ===== GENERATE
 async function generate(){
- const apiKey = document.getElementById("apiKey").value;
+ let apiKey=apiKeyInput.value;
+ let jml=parseInt(jumlah.value);
+
+ if(jml>20){alert("Max 20 soal");return;}
 
  output.innerHTML="Loading...";
 
- const res = await fetch("https://api.openai.com/v1/chat/completions",{
+ let res=await fetch("https://api.openai.com/v1/chat/completions",{
   method:"POST",
   headers:{
    "Authorization":"Bearer "+apiKey,
@@ -152,44 +170,47 @@ async function generate(){
    messages:[{
     role:"user",
     content:`
-KELUARKAN HANYA JSON!
+Buat soal sesuai kurikulum.
 
+Kurikulum: ${kurikulum.value}
+Jenjang: ${jenjang.value}
+Kelas: ${kelas.value}
+Mapel: ${mapel.value}
+Materi: ${materi.value}
+Bentuk: ${bentuk.value}
+Jumlah: ${jml}
+Opsi: ${opsi.value}
+Bloom: ${bloom.value}
+Level: ${level.value}
+
+FORMAT JSON:
 [
 {"soal":"","opsi":["A","B","C","D"],"jawaban":"","deskripsi_gambar":""}
 ]
-
-Buat ${jumlah.value} soal ${mapel.value} materi ${materi.value}.
 `
    }]
   })
  });
 
- const dataAI = await res.json();
- const soalJSON = extractJSON(dataAI.choices[0].message.content);
+ let dataAI=await res.json();
+ let soal=extractJSON(dataAI.choices[0].message.content);
 
- if(!soalJSON){
-  output.innerHTML="❌ Error AI";
-  return;
- }
+ if(!soal){output.innerHTML="Error AI";return;}
 
  output.innerHTML="";
 
- for(let i=0;i<soalJSON.length;i++){
-  let s = soalJSON[i];
-
-  let html = `<div class="soal">
-  <b>${i+1}. ${s.soal}</b>`;
+ for(let i=0;i<soal.length;i++){
+  let s=soal[i];
+  let html=`<div class="soal"><b>${i+1}. ${s.soal}</b>`;
 
   if(s.opsi){
-    s.opsi.forEach(o=>{
-      html += `<div>- ${o}</div>`;
-    });
+    s.opsi.forEach(o=>html+=`<div>- ${o}</div>`);
   }
 
-  html += `<br><i>Jawaban: ${s.jawaban}</i>`;
+  html+=`<br><i>Jawaban: ${s.jawaban}</i>`;
 
   if(gambar.checked){
-    const imgRes = await fetch("https://api.openai.com/v1/images/generations",{
+    let imgRes=await fetch("https://api.openai.com/v1/images/generations",{
       method:"POST",
       headers:{
         "Authorization":"Bearer "+apiKey,
@@ -202,14 +223,16 @@ Buat ${jumlah.value} soal ${mapel.value} materi ${materi.value}.
       })
     });
 
-    const imgData = await imgRes.json();
-    html += `<img src="${imgData.data[0].url}">`;
+    let imgData=await imgRes.json();
+    html+=`<img src="${imgData.data[0].url}">`;
   }
 
-  html += `</div>`;
-  output.innerHTML += html;
+  html+=`</div>`;
+  output.innerHTML+=html;
  }
 }
+
+const apiKeyInput=document.getElementById("apiKey");
 
 </script>
 
