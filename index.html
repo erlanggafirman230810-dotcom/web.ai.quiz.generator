@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Question Master - Full Features Fix</title>
+    <title>AI Question Master - Full Version</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -19,56 +19,66 @@
 </head>
 <body class="p-4 md:p-10">
 
-    <div id="apiModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 text-left">
-        <div class="bg-white rounded-[2.5rem] p-8 w-full max-w-md shadow-2xl">
+    <div id="apiModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 text-left text-slate-800">
+        <div class="bg-white rounded-[2.5rem] p-8 w-full max-w-md shadow-2xl border border-white">
             <div class="flex justify-between items-center mb-8">
                 <div class="flex items-center gap-3">
                     <div class="bg-indigo-100 p-2.5 rounded-xl text-indigo-600"><i data-lucide="settings-2"></i></div>
-                    <h3 class="text-xl font-extrabold text-slate-800">API Settings</h3>
+                    <h3 class="text-xl font-extrabold">API Configuration</h3>
                 </div>
                 <button onclick="toggleModal()" class="p-2 hover:bg-slate-100 rounded-full"><i data-lucide="x"></i></button>
             </div>
             <div class="space-y-6">
                 <div>
-                    <label class="text-[11px] font-bold text-slate-400 uppercase mb-2 block tracking-widest">Gemini API Key (Teks)</label>
-                    <input type="password" id="gemini_key" class="w-full px-4 py-3 bg-slate-50 rounded-xl outline-none border-none text-sm">
+                    <label class="text-[11px] font-black text-slate-400 uppercase mb-2 block tracking-widest">Gemini API Key</label>
+                    <input type="password" id="gemini_key" class="w-full px-4 py-3 bg-slate-50 rounded-xl outline-none border-none text-sm shadow-inner">
                 </div>
                 <div>
-                    <label class="text-[11px] font-bold text-slate-400 uppercase mb-2 block tracking-widest">DALL-E 3 API Key (Gambar)</label>
-                    <input type="password" id="openai_key" class="w-full px-4 py-3 bg-slate-50 rounded-xl outline-none border-none text-sm">
+                    <label class="text-[11px] font-black text-slate-400 uppercase mb-2 block tracking-widest">OpenAI (DALL-E 3) API Key</label>
+                    <input type="password" id="openai_key" class="w-full px-4 py-3 bg-slate-50 rounded-xl outline-none border-none text-sm shadow-inner">
                 </div>
                 <button onclick="saveApiKeys()" class="w-full bg-indigo-600 text-white py-4 rounded-2xl font-bold hover:bg-indigo-700 shadow-xl transition-all">Simpan Konfigurasi</button>
             </div>
         </div>
     </div>
 
-    <div class="max-w-6xl mx-auto bg-white p-6 md:p-10 rounded-[3rem] shadow-2xl border border-slate-100">
-        <div class="flex justify-between items-center mb-12 border-b border-slate-50 pb-8 text-left">
+    <div class="max-w-6xl mx-auto bg-white p-6 md:p-10 rounded-[3rem] shadow-2xl border border-slate-100 text-left">
+        <div class="flex justify-between items-center mb-12 border-b border-slate-50 pb-8">
             <div class="flex items-center gap-5">
                 <div class="bg-indigo-600 p-4 rounded-2xl text-white shadow-xl"><i data-lucide="sparkles"></i></div>
                 <div>
                     <h1 class="text-3xl font-black text-slate-900 tracking-tighter uppercase leading-tight">Question AI Master</h1>
-                    <p class="text-slate-500 font-medium text-sm">Soal Taksonomi Bloom + Fitur Gambar AI</p>
+                    <p class="text-slate-500 font-medium text-sm">Kurikulum Merdeka & K-13 (SD-SMA)</p>
                 </div>
             </div>
             <button onclick="toggleModal()" class="p-3.5 bg-slate-50 text-slate-600 rounded-2xl hover:bg-indigo-50 border border-slate-100 transition-all"><i data-lucide="settings"></i></button>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 text-left">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
             <div class="space-y-10">
                 <section>
                     <h2 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-4">Informasi Dasar</h2>
-                    <input type="text" id="mapel" placeholder="Mata Pelajaran (Contoh: IPA)" class="w-full p-4 bg-slate-50 rounded-2xl outline-none mb-4 font-bold text-sm border-none">
-                    <select id="kelas" class="w-full p-4 bg-slate-50 rounded-2xl outline-none font-bold text-sm mb-4 border-none">
+                    <input type="text" id="mapel" placeholder="Mata Pelajaran..." class="w-full p-4 bg-slate-50 rounded-2xl outline-none mb-4 font-bold text-sm border-none shadow-sm">
+                    
+                    <select id="kelas" class="w-full p-4 bg-slate-50 rounded-2xl outline-none font-bold text-sm mb-4 border-none shadow-sm">
                         <option value="" disabled selected>Pilih Kelas</option>
-                        <option>Kelas 7 SMP</option><option>Kelas 8 SMP</option><option>Kelas 9 SMP</option>
-                        <option>Kelas 10 SMA</option><option>Kelas 11 SMA</option><option>Kelas 12 SMA</option>
+                        <optgroup label="Sekolah Dasar (SD/MI)">
+                            <option>Kelas 1 SD/MI</option><option>Kelas 2 SD/MI</option><option>Kelas 3 SD/MI</option>
+                            <option>Kelas 4 SD/MI</option><option>Kelas 5 SD/MI</option><option>Kelas 6 SD/MI</option>
+                        </optgroup>
+                        <optgroup label="SMP / MTs">
+                            <option>Kelas 7 SMP</option><option>Kelas 8 SMP</option><option>Kelas 9 SMP</option>
+                        </optgroup>
+                        <optgroup label="SMA / SMK / MA">
+                            <option>Kelas 10 SMA</option><option>Kelas 11 SMA</option><option>Kelas 12 SMA</option>
+                        </optgroup>
                     </select>
+
                     <div class="grid grid-cols-2 gap-4">
-                        <select id="jenisSoal" class="p-4 bg-slate-50 rounded-2xl outline-none font-bold text-sm border-none">
-                            <option>Pilihan Ganda</option><option>Isian</option><option>Essay</option>
+                        <select id="jenisSoal" class="p-4 bg-slate-50 rounded-2xl outline-none font-bold text-sm border-none shadow-sm">
+                            <option>Pilihan Ganda</option><option>Isian Singkat</option><option>Essay</option>
                         </select>
-                        <select id="jumlahOpsi" class="p-4 bg-slate-50 rounded-2xl outline-none font-bold text-sm border-none">
+                        <select id="jumlahOpsi" class="p-4 bg-slate-50 rounded-2xl outline-none font-bold text-sm border-none shadow-sm">
                             <option value="4">4 Opsi (A-D)</option><option value="5">5 Opsi (A-E)</option>
                         </select>
                     </div>
@@ -96,12 +106,12 @@
                         <div class="kognitif-btn" onclick="this.classList.toggle('active')" data-level="C6"><span>C6</span><strong>Kreasi</strong></div>
                     </div>
                     
-                    <div class="space-y-3">
-                        <div class="p-4 bg-white border border-slate-100 rounded-2xl flex items-center justify-between shadow-sm">
+                    <div class="space-y-3 text-slate-700">
+                        <div class="p-4 bg-white border border-slate-100 rounded-2xl flex items-center justify-between shadow-sm hover:border-indigo-200 transition-all">
                             <label class="flex items-center gap-3 text-sm font-bold"><input type="checkbox" id="checkGambar"> Pakai Gambar AI (DALL-E 3)</label>
                             <input type="number" id="numGambar" value="0" class="input-number">
                         </div>
-                        <div class="p-4 bg-white border border-slate-100 rounded-2xl flex items-center justify-between shadow-sm">
+                        <div class="p-4 bg-white border border-slate-100 rounded-2xl flex items-center justify-between shadow-sm hover:border-indigo-200 transition-all">
                             <label class="flex items-center gap-3 text-sm font-bold"><input type="checkbox" id="checkWacana"> Sertakan Wacana Teks</label>
                             <input type="number" id="numWacana" value="0" class="input-number">
                         </div>
@@ -110,7 +120,7 @@
 
                 <section>
                     <h2 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-4">Cakupan Materi</h2>
-                    <textarea id="materiInput" class="w-full h-32 p-5 bg-slate-50 rounded-[2rem] outline-none text-sm font-medium resize-none border-none shadow-inner" placeholder="Contoh: Sistem tata surya, revolusi bumi..."></textarea>
+                    <textarea id="materiInput" class="w-full h-32 p-5 bg-slate-50 rounded-[2rem] outline-none text-sm font-medium resize-none border-none shadow-inner" placeholder="Masukkan indikator atau materi soal..."></textarea>
                 </section>
 
                 <button id="btnGen" onclick="prosesGen()" class="w-full bg-indigo-600 text-white font-black py-5 rounded-[2rem] shadow-2xl hover:bg-indigo-700 transition-all text-lg flex justify-center gap-3 active:scale-95">
@@ -119,12 +129,12 @@
             </div>
         </div>
 
-        <div id="containerHasil" class="hidden mt-12 p-8 bg-slate-900 rounded-[2rem] text-slate-100 text-left">
+        <div id="containerHasil" class="hidden mt-12 p-8 bg-slate-900 rounded-[2rem] text-slate-100">
             <div class="flex justify-between items-center mb-6">
-                <h3 class="font-bold text-xl flex gap-2 items-center"><i data-lucide="file-text" class="text-indigo-400"></i> Hasil Naskah AI</h3>
+                <h3 class="font-bold text-xl flex gap-2 items-center"><i data-lucide="file-text" class="text-indigo-400"></i> Naskah Soal</h3>
                 <button onclick="salinTeks()" class="bg-indigo-500 hover:bg-indigo-400 px-4 py-2 rounded-xl text-xs font-bold transition-all">Salin Teks</button>
             </div>
-            <div id="hasilSoal" class="text-sm bg-slate-800 p-6 rounded-xl border border-slate-700 leading-relaxed overflow-x-auto text-left"></div>
+            <div id="hasilSoal" class="text-sm bg-slate-800 p-6 rounded-xl border border-slate-700 leading-relaxed overflow-x-auto"></div>
         </div>
     </div>
 
@@ -145,29 +155,21 @@
 
         async function prosesGen() {
             const key = localStorage.getItem('GK');
-            if(!key) { alert("Isi API Key Gemini di pengaturan!"); toggleModal(); return; }
+            if(!key) { alert("Isi API Key Gemini di Pengaturan!"); toggleModal(); return; }
 
             const mapel = document.getElementById('mapel').value;
             const materi = document.getElementById('materiInput').value;
             const levels = Array.from(document.querySelectorAll('.kognitif-btn.active')).map(el => el.getAttribute('data-level')).join(",");
-            const wacanaCount = document.getElementById('numWacana').value;
-            const imageCount = document.getElementById('numGambar').value;
-
-            if(!mapel || !materi || !levels) { alert("Lengkapi data dan pilih minimal satu Level C!"); return; }
+            
+            if(!mapel || !materi || !levels) { alert("Lengkapi Mapel, Materi, dan Level!"); return; }
 
             const btn = document.getElementById('btnGen');
-            btn.innerHTML = "Sedang Memproses..."; btn.disabled = true;
+            btn.innerHTML = "Processing..."; btn.disabled = true;
 
-            const prompt = `Buatkan soal ${document.getElementById('jenisSoal').value} ${mapel} kelas ${document.getElementById('kelas').value}. 
-            Materi: ${materi}. 
-            Level Kognitif: ${levels}. 
-            Opsi: ${document.getElementById('jumlahOpsi').value}. 
-            Wacana: ${wacanaCount} teks. 
-            Gambar: sertakan instruksi prompt gambar untuk ${imageCount} soal. 
-            Sertakan kunci jawaban lengkap.`;
+            const prompt = `Buatkan soal ${document.getElementById('jenisSoal').value} ${mapel} kelas ${document.getElementById('kelas').value}. Materi: ${materi}. Level Kognitif: ${levels}. Opsi: ${document.getElementById('jumlahOpsi').value}. Wacana: ${document.getElementById('numWacana').value}. Gambar: berikan prompt DALL-E untuk ${document.getElementById('numGambar').value} gambar. Sertakan kunci jawaban.`;
 
             try {
-                // Jalur paling aman v1beta dengan model flash
+                // Jalur v1beta + gemini-1.5-flash (paling aman buat akun baru)
                 const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`, {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
@@ -176,14 +178,14 @@
                 
                 const data = await res.json();
                 if(data.error) {
-                    alert("Error: " + data.error.message);
+                    alert("Error dari Google: " + data.error.message);
                 } else {
                     document.getElementById('containerHasil').classList.remove('hidden');
                     document.getElementById('hasilSoal').innerText = data.candidates[0].content.parts[0].text;
                     window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
                 }
             } catch (e) {
-                alert("Gagal menghubungi server AI!");
+                alert("Gagal memproses AI!");
             } finally {
                 btn.innerHTML = `<i data-lucide="zap"></i> Buat Naskah Soal`;
                 btn.disabled = false; lucide.createIcons();
@@ -191,8 +193,7 @@
         }
 
         function salinTeks() {
-            const teks = document.getElementById('hasilSoal').innerText;
-            navigator.clipboard.writeText(teks);
+            navigator.clipboard.writeText(document.getElementById('hasilSoal').innerText);
             alert("Naskah disalin!");
         }
     </script>
