@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Quiz Generator PRO</title>
+
+<style>
+:root {
+  --bg:#ffffff;
+  --text:#000;
+  --card:#f5f5f5;
+}
+
+body.dark {
+  --bg:#121212;
+  --text:#fff;
+  --card:#1e1e1e;
+}
+
+body {
+  font-family: Arial;
+  background: var(--bg);
+  color: var(--text);
+  padding:20px;
+}
+
+.container {
+  max-width:900px;
+  margin:auto;
+  background:var(--card);
+  padding:20px;
+  border-radius:12px;
+}
+
+input,select,button{
+  width:100%;
+  margin-top:10px;
+  padding:10px;
+  border-radius:8px;
+}
+
+button{
+  background:#4CAF50;
+  color:white;
+  border:none;
+  font-weight:bold;
+}
+
+.soal {
+  margin-top:20px;
+  padding:15px;
+  background:rgba(0,0,0,0.05);
+  border-radius:10px;
+}
+
+body.dark .soal {
+  background:rgba(255,255,255,0.05);
+}
+
+img{
+  max-width:100%;
+  margin-top:10px;
+  border-radius:10px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+<h2>AI Quiz Generator PRO 🚀</h2>
+
+<input type="password" id="apiKey" placeholder="API Key">
+
+<select id="jenjang">
+<option value="">Jenjang</option>
+<option>SD/MI</option>
+<option>SMP/MTs</option>
+<option>SMA/MA</option>
+</select>
+
+<select id="kelas"></select>
+
+<input id="mapel" placeholder="Mata Pelajaran">
+<input id="topik" placeholder="Topik">
+
+<select id="bentuk">
+<option>Pilihan Ganda</option>
+<option>Essay</option>
+<option>Benar/Salah</option>
+</select>
+
+<input type="number" id="jumlah" max="20" placeholder="Jumlah Soal (max 20)">
+
+<label>Soal Bergambar</label>
+<input type="checkbox" id="gambar" checked>
+
+<label>Dark Mode</label>
+<input type="checkbox" id="darkMode">
+
+<button onclick="generate()">Generate Soal</button>
+
+<div id="output"></div>
+</div>
+
+<script>
+// DARK MODE
+darkMode.onchange = () => document.body.classList.toggle("dark");
+
+// KELAS
+const kelasMap = {
+ "SD/MI":["1","2","3","4","5","6"],
+ "SMP/MTs":["7","8","9"],
+ "SMA/MA":["10","11","12"]
+};
+
+jenjang.onchange = ()=>{
+ kelas.innerHTML="";
+ kelasMap[jenjang.value].forEach(k=>{
+   let o=document.createElement("option");
+   o.textContent=k;
+   kelas.appendChild(o);
+ });
+};
+
+// GENERATE
+async function generate(){
+ const apiKey=document.getElementById("apiKey").value;
+ output.innerHTML="Loading soal & gambar...";
+
+ // 1. GENERATE SOAL JSON
+ const soalRes = await fetch("https://api.openai.com/v1/chat/completions",{
+  method:"POST",
+  headers:{
+   "Authorization":"Bearer "+apiKey,
+   "Content-Type":"application/json"
+  },
+  body:JSON.stringify({
+   model:"gpt-4o-mini",
+   messages:[{
+    role:"user",
+    content:`
+Buat ${jumlah.value} soal ${mapel.value} topik ${topik.value}.
+Jenis: ${bentuk.value}
+
+Format JSON:
+[
+ {
+  "soal":"...",
+  "opsi":["A","B","C","D"],
+  "jawaban":"...",
+  "deskripsi_gambar":"deskripsi visual singkat"
+ }
+]
+`
+   }]
+  })
+ });
+
+ const soalData = await soalRes.json();
+ let soalJSON;
+
+ try{
+  soalJSON = JSON.parse(soalData.choices[0].message.content);
+ }catch{
+  output.innerHTML="Error parsing AI. Coba lagi.";
+  return;
+ }
+
+ output.innerHTML="";
+
+ // 2. LOOP PER SOAL + GENERATE GAMBAR
+ for(let i=0;i<soalJSON.length;i++){
+  const s = soalJSON[i];
+
+  let html = `<div class="soal">
+  <b>${i+1}. ${s.soal}</b><br>`;
+
+  if(s.opsi){
+    s.opsi.forEach(o=>{
+      html += `<div>- ${o}</div>`;
+    });
+  }
+
+  html += `<br><i>Jawaban: ${s.jawaban}</i>`;
+
+  // GENERATE GAMBAR PER SOAL
+  if(gambar.checked){
+    const imgRes = await fetch("https://api.openai.com/v1/images/generations",{
+      method:"POST",
+      headers:{
+        "Authorization":"Bearer "+apiKey,
+        "Content-Type":"application/json"
+      },
+      body:JSON.stringify({
+        model:"gpt-image-1",
+        prompt:s.deskripsi_gambar,
+        size:"512x512"
+      })
+    });
+
+    const imgData = await imgRes.json();
+    const imgUrl = imgData.data[0].url;
+
+    html += `<img src="${imgUrl}">`;
+  }
+
+  html += `</div>`;
+
+  output.innerHTML += html;
+ }
+}
+</script>
+
+</body>
+</html>
